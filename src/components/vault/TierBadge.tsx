@@ -11,7 +11,7 @@ export function TierBadge({ tier, className }: { tier: string; className?: strin
     <span
       className={cn(
         "border px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em]",
-        styles[tier] ?? styles.Rookie,
+        styles[tier] ?? styles["Rookie"],
         className,
       )}
     >
