@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ArenaRouteImport } from './routes/arena'
+import { Route as ArenaAgentIdRouteImport } from './routes/arena.$agentId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,39 @@ const ArenaRoute = ArenaRouteImport.update({
   path: '/arena',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArenaAgentIdRoute = ArenaAgentIdRouteImport.update({
+  id: '/$agentId',
+  path: '/$agentId',
+  getParentRoute: () => ArenaRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/arena': typeof ArenaRoute
+  '/arena': typeof ArenaRouteWithChildren
+  '/arena/$agentId': typeof ArenaAgentIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/arena': typeof ArenaRoute
+  '/arena': typeof ArenaRouteWithChildren
+  '/arena/$agentId': typeof ArenaAgentIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/arena': typeof ArenaRoute
+  '/arena': typeof ArenaRouteWithChildren
+  '/arena/$agentId': typeof ArenaAgentIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/arena'
+  fullPaths: '/' | '/arena' | '/arena/$agentId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/arena'
-  id: '__root__' | '/' | '/arena'
+  to: '/' | '/arena' | '/arena/$agentId'
+  id: '__root__' | '/' | '/arena' | '/arena/$agentId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ArenaRoute: typeof ArenaRoute
+  ArenaRoute: typeof ArenaRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +74,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArenaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/arena/$agentId': {
+      id: '/arena/$agentId'
+      path: '/$agentId'
+      fullPath: '/arena/$agentId'
+      preLoaderRoute: typeof ArenaAgentIdRouteImport
+      parentRoute: typeof ArenaRoute
+    }
   }
 }
 
+interface ArenaRouteChildren {
+  ArenaAgentIdRoute: typeof ArenaAgentIdRoute
+}
+
+const ArenaRouteChildren: ArenaRouteChildren = {
+  ArenaAgentIdRoute: ArenaAgentIdRoute,
+}
+
+const ArenaRouteWithChildren = ArenaRoute._addFileChildren(ArenaRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ArenaRoute: ArenaRoute,
+  ArenaRoute: ArenaRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

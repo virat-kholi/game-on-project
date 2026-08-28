@@ -7,7 +7,7 @@ import { Lives, TierBadge } from "@/components/vault/TierBadge";
 import { getRoster } from "@/lib/vault.functions";
 import { getPlayerId } from "@/lib/player";
 
-export const Route = createFileRoute("/arena")({
+export const Route = createFileRoute("/arena/")({
   head: () => ({
     meta: [
       { title: "Arena Roster — VAULT" },
