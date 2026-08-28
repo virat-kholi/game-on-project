@@ -21,7 +21,7 @@ export const Route = createFileRoute("/arena/$agentId")({
       },
     ],
   }),
-  component: Battle;
+  component: Battle,
 });
 
 type Msg = { role: "user" | "assistant"; content: string };
